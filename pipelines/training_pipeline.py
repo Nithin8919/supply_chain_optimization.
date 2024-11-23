@@ -8,12 +8,13 @@ from src.logging_config import logging
 import logging
 
 
+
 class training_pipeline:
     def start_data_ingestion(self):
         try:    
             data_ingestion = DataIngestion()
             train_data_path, test_data_path = data_ingestion.ingest_and_split(source_type='csv', 
-        file_path='Data/dynamic_pricing.csv')
+        file_path='/Users/nitin/Desktop/supply_chain_chain_/data/FMCG_data_augmented.csv')
             return train_data_path, test_data_path
         except Exception as e:
             logging.error("There is prob in ingestion tp.")
