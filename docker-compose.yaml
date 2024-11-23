@@ -1,0 +1,14 @@
+version: '3.9'
+services:
+  postgres:
+    image: postgres:latest
+    container_name: postgres-supply-chain
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: mysecretpassword
+      POSTGRES_DB: supply_chain
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./supply_chain_data.csv:/docker-entrypoint-initdb.d/supply_chain_data.csv
+    ports:
+      - "5432:5432"
