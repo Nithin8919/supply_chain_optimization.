@@ -6,231 +6,186 @@ from sklearn.compose import ColumnTransformer
 from sklearn.pipeline import Pipeline
 import os
 from dataclasses import dataclass
-from typing import List, Tuple, Dict
+from typing import List
 from sklearn.impute import SimpleImputer
 import joblib
+
 import sys
-from scipy import sparse
-from sklearn.feature_selection import SelectKBest, f_regression
 
 # Ensuring the script finds logging_config correctly
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../..')))
 from src.logging_config import logging
 
+# Config class to specify paths for the objects
 @dataclass
 class DataTransformationConfig:
-    preprocessor_obj_file_path: str = os.path.join('artifacts', 'preprocessor.pkl')
-    train_array_file_path: str = os.path.join('artifacts', 'train_array.pkl')
-    test_array_file_path: str = os.path.join('artifacts', 'test_array.pkl')
-    feature_names_file_path: str = os.path.join('artifacts', 'feature_names.pkl')
-    compression_protocol: int = 4
-    max_features: int = 1000
+    preprocessor_obj_file_path = os.path.join('artifacts', 'preprocessor.pkl')
+    train_array_file_path = os.path.join('artifacts', 'train_array.pkl')
+    test_array_file_path = os.path.join('artifacts', 'test_array.pkl')
+    feature_names_file_path = os.path.join('artifacts', 'feature_names.pkl')
+
+def get_file_size(file_path):
+    """Get file size in MB"""
+    size_bytes = os.path.getsize(file_path)
+    size_mb = size_bytes / (1024 * 1024)
+    return round(size_mb, 2)
 
 class PreprocessorStrategy(ABC):
-    """Abstract base class for preprocessing strategies"""
     @abstractmethod
-    def preprocessor(self, df: pd.DataFrame) -> ColumnTransformer:
-        """Abstract method for creating preprocessing pipeline"""
+    def preprocessor(self, df: pd.DataFrame):
         pass
-
-    @abstractmethod
-    def initiate_data_transformation(self, train_path: str, test_path: str) -> Tuple[np.ndarray, np.ndarray]:
-        """Abstract method for initiating data transformation"""
-        pass
-
-class MemoryOptimizer:
-    @staticmethod
-    def reduce_mem_usage(df: pd.DataFrame) -> pd.DataFrame:
-        """Reduce memory usage of a dataframe by choosing better dtypes"""
-        start_mem = df.memory_usage().sum() / 1024**2
-        logging.info(f'Memory usage of dataframe is {start_mem:.2f} MB')
-        
-        for col in df.columns:
-            col_type = df[col].dtype
-            
-            if col_type != object:
-                c_min = df[col].min()
-                c_max = df[col].max()
-                
-                if str(col_type)[:3] == 'int':
-                    if c_min > np.iinfo(np.int8).min and c_max < np.iinfo(np.int8).max:
-                        df[col] = df[col].astype(np.int8)
-                    elif c_min > np.iinfo(np.int16).min and c_max < np.iinfo(np.int16).max:
-                        df[col] = df[col].astype(np.int16)
-                    elif c_min > np.iinfo(np.int32).min and c_max < np.iinfo(np.int32).max:
-                        df[col] = df[col].astype(np.int32)
-                else:
-                    if c_min > np.finfo(np.float16).min and c_max < np.finfo(np.float16).max:
-                        df[col] = df[col].astype(np.float32)
-                    else:
-                        df[col] = df[col].astype(np.float32)
-        
-        end_mem = df.memory_usage().sum() / 1024**2
-        logging.info(f'Memory usage after optimization is: {end_mem:.2f} MB')
-        logging.info(f'Decreased by {100 * (start_mem - end_mem) / start_mem:.1f}%')
-        return df
 
 class ColumnTransformation(PreprocessorStrategy):
     
     def __init__(self):
         self.data_transformation_config = DataTransformationConfig()
-        self.target_column = 'product_wg_ton'
-        self.memory_optimizer = MemoryOptimizer()
-        
-    def save_object(self, file_path: str, obj) -> None:
+
+    def save_object(self, file_path, obj):
+        """Save an object to a file."""
         try:
             os.makedirs(os.path.dirname(file_path), exist_ok=True)
             with open(file_path, 'wb') as file:
-                joblib.dump(obj, file, compress=('gzip', 3), protocol=self.data_transformation_config.compression_protocol)
-            
-            file_size = os.path.getsize(file_path) / (1024 * 1024)
-            logging.info(f"Object saved to {file_path} (Size: {file_size:.2f} MB)")
+                joblib.dump(obj, file)
+            file_size = get_file_size(file_path)
+            logging.info(f"Object saved to {file_path} (Size: {file_size} MB)")
         except Exception as e:
             logging.error(f"Failed to save object to {file_path}: {e}")
             raise e
 
-    def get_categorical_cardinality(self, df: pd.DataFrame, categorical_cols: List[str]) -> Dict[str, int]:
-        """Get cardinality of categorical columns to identify high-cardinality features"""
-        cardinality = {}
-        for col in categorical_cols:
-            cardinality[col] = df[col].nunique()
-        return cardinality
-
-    def preprocessor(self, df: pd.DataFrame) -> ColumnTransformer:
+    def preprocessor(self, df: pd.DataFrame):
         try:
+            # Remove specified columns if they exist
+            columns_to_drop = ['Ware_house_ID', 'WH_Manager_ID']
+            df = df.drop(columns=columns_to_drop, errors='ignore')
+            
+            # Log total number of columns after dropping
+            logging.info(f"Total number of columns after dropping specified features: {len(df.columns)}")
+            
+            # Extracting categorical columns
             categorical_cols = df.select_dtypes(include=['object']).columns
-            numerical_cols = df.select_dtypes(include=['int64', 'float64']).columns.difference([self.target_column])
+            logging.info(f"Number of categorical columns: {len(categorical_cols)}")
+            logging.info(f"Categorical columns: {categorical_cols.tolist()}")
             
-            # Get cardinality of categorical columns
-            cardinality = self.get_categorical_cardinality(df, categorical_cols)
+            # Pipeline for categorical features
+            cat_pipeline = Pipeline(
+                steps=[
+                    ("imputer", SimpleImputer(strategy="most_frequent")),
+                    ("encoder", OneHotEncoder(handle_unknown='ignore'))
+                ]
+            )
+
+            # Extracting numerical columns (excluding target column)
+            numerical_cols = df.select_dtypes(include=['int64', 'float64']).columns.difference(['product_wg_ton'])
+            logging.info(f"Number of numerical columns: {len(numerical_cols)}")
+            logging.info(f"Numerical columns: {numerical_cols.tolist()}")
             
-            # Separate high and low cardinality categorical columns
-            high_card_threshold = 10
-            high_card_cols = [col for col, card in cardinality.items() if card > high_card_threshold]
-            low_card_cols = [col for col, card in cardinality.items() if card <= high_card_threshold]
-            
-            logging.info(f"High cardinality columns: {len(high_card_cols)}")
-            logging.info(f"Low cardinality columns: {len(low_card_cols)}")
-            
-            transformers = []
-            
-            # Numerical pipeline with feature selection
-            if len(numerical_cols) > 0:
-                num_pipeline = Pipeline([
+            num_pipeline = Pipeline(
+                steps=[
                     ("imputer", SimpleImputer(strategy="median")),
-                    ("scaler", StandardScaler(copy=False)),
-                    ("selector", SelectKBest(f_regression, k=min(50, len(numerical_cols))))
-                ])
-                transformers.append(("num", num_pipeline, numerical_cols))
-            
-            # Low cardinality categorical pipeline
-            if len(low_card_cols) > 0:
-                low_card_pipeline = Pipeline([
-                    ("imputer", SimpleImputer(strategy="constant", fill_value="missing")),
-                    ("encoder", OneHotEncoder(handle_unknown='ignore', sparse_output=True, dtype=np.float32))
-                ])
-                transformers.append(("cat_low", low_card_pipeline, low_card_cols))
-            
-            # High cardinality categorical pipeline with feature selection
-            if len(high_card_cols) > 0:
-                high_card_pipeline = Pipeline([
-                    ("imputer", SimpleImputer(strategy="constant", fill_value="missing")),
-                    ("encoder", OneHotEncoder(handle_unknown='ignore', sparse_output=True, dtype=np.float32, max_categories=20))
-                ])
-                transformers.append(("cat_high", high_card_pipeline, high_card_cols))
+                    ("scaler", StandardScaler())
+                ]
+            )
             
             transform = ColumnTransformer(
-                transformers=transformers,
-                remainder='drop',
-                sparse_threshold=0.3
+                transformers=[
+                    ("num", num_pipeline, numerical_cols),
+                    ("cat", cat_pipeline, categorical_cols)
+                ]
             )
             
             return transform
         
         except Exception as e:
-            logging.error(f"Exception in preprocessing: {e}")
+            logging.error("Exception occurred in preprocessing")
             raise e
 
-    def initiate_data_transformation(self, train_path: str, test_path: str) -> Tuple[np.ndarray, np.ndarray]:
+    
+    
+    def initiate_data_transformation(self, train_path, test_path):
         try:
-            # Load and optimize memory usage of dataframes
+            # Load datasets and log file sizes
+            logging.info(f"Training data file size: {get_file_size(train_path)} MB")
+            logging.info(f"Test data file size: {get_file_size(test_path)} MB")
+            
             train_df = pd.read_csv(train_path)
             test_df = pd.read_csv(test_path)
-            
-            logging.info("Optimizing memory usage of training data...")
-            train_df = self.memory_optimizer.reduce_mem_usage(train_df)
-            logging.info("Optimizing memory usage of testing data...")
-            test_df = self.memory_optimizer.reduce_mem_usage(test_df)
-            
-            logging.info(f"Training dataset shape: {train_df.shape}")
-            logging.info(f"Testing dataset shape: {test_df.shape}")
-            
-            # Clean column names
+
+            # Strip whitespace from column names
             train_df.columns = train_df.columns.str.strip()
             test_df.columns = test_df.columns.str.strip()
-            
-            # Validate target column
-            self._validate_target_column(train_df, test_df)
-            
+
+            logging.info(f"Initial number of columns in training data: {len(train_df.columns)}")
+            logging.info(f"Columns in training data: {train_df.columns.tolist()}")
+
+            target_column = 'product_wg_ton'
+
+            # Check for target column existence
+            if target_column not in train_df.columns:
+                raise KeyError(f"Target column '{target_column}' not found in training DataFrame.")
+
             # Separate features and target
-            input_feature_train_df = train_df.drop(columns=[self.target_column])
-            target_feature_train_df = train_df[self.target_column]
-            input_feature_test_df = test_df.drop(columns=[self.target_column])
-            target_feature_test_df = test_df[self.target_column]
-            
-            # Create and fit preprocessing pipeline
+            input_feature_train_df = train_df.drop(columns=[target_column], errors='ignore')
+            target_feature_train_df = train_df[target_column]
+
+            if target_column not in test_df.columns:
+                raise KeyError(f"Target column '{target_column}' not found in testing DataFrame.")
+
+            input_feature_test_df = test_df.drop(columns=[target_column], errors='ignore')
+            target_feature_test_df = test_df[target_column]
+
+            # Log shapes after splitting
+            logging.info(f"Input features shape: {input_feature_train_df.shape}")
+            logging.info(f"Target feature shape: {target_feature_train_df.shape}")
+
+            # Create processing pipeline
             processing = self.preprocessor(train_df)
-            
-            # Transform features with progress logging
-            logging.info("Starting feature transformation...")
-            logging.info("Transforming training features...")
+
+            # Apply transformations
             input_feature_train_arr = processing.fit_transform(input_feature_train_df)
-            logging.info("Transforming testing features...")
             input_feature_test_arr = processing.transform(input_feature_test_df)
-            
-            # Convert sparse matrices to dense if needed
-            if sparse.issparse(input_feature_train_arr):
-                input_feature_train_arr = input_feature_train_arr.toarray()
-            if sparse.issparse(input_feature_test_arr):
-                input_feature_test_arr = input_feature_test_arr.toarray()
-            
-            # Log feature reduction information
-            logging.info(f"Original feature count: {input_feature_train_df.shape[1]}")
-            logging.info(f"Reduced feature count: {input_feature_train_arr.shape[1]}")
-            
-            # Convert target arrays
-            target_feature_train_arr = target_feature_train_df.values.reshape(-1, 1)
-            target_feature_test_arr = target_feature_test_df.values.reshape(-1, 1)
-            
-            # Combine features and target
-            train_arr = np.hstack([input_feature_train_arr, target_feature_train_arr])
-            test_arr = np.hstack([input_feature_test_arr, target_feature_test_arr])
-            
-            # Save artifacts with detailed logging
-            logging.info("Saving preprocessor object...")
-            self.save_object(self.data_transformation_config.preprocessor_obj_file_path, processing)
-            
-            logging.info("Saving training array...")
-            self.save_object(self.data_transformation_config.train_array_file_path, train_arr)
-            
-            logging.info("Saving testing array...")
-            self.save_object(self.data_transformation_config.test_array_file_path, test_arr)
-            
-            # Save feature names
+
+            # Save feature names for debugging
             feature_names = processing.get_feature_names_out()
             self.save_object(self.data_transformation_config.feature_names_file_path, feature_names)
-            
-            return train_arr, test_arr
+            logging.info(f"Number of features after transformation: {len(feature_names)}")
+
+            # Combine arrays
+            train_arr = np.c_[
+                input_feature_train_arr, np.array(target_feature_train_df)
+            ]
+            test_arr = np.c_[
+                input_feature_test_arr, np.array(target_feature_test_df)
+            ]
+
+            # Log final array shapes
+            logging.info(f"Final transformed train array shape: {train_arr.shape}")
+            logging.info(f"Final transformed test array shape: {test_arr.shape}")
+
+            # Save objects and log their sizes
+            self.save_object(
+                file_path=self.data_transformation_config.preprocessor_obj_file_path,
+                obj=processing
+            )
+
+            self.save_object(
+                file_path=self.data_transformation_config.train_array_file_path,
+                obj=train_arr
+            )
+
+            self.save_object(
+                file_path=self.data_transformation_config.test_array_file_path,
+                obj=test_arr
+            )
+
+            return (
+                train_arr,
+                test_arr,
+            )
 
         except Exception as e:
-            logging.error(f"Transformation error: {str(e)}")
+            logging.error("Exception occurred in the transformation step: %s", str(e))
             raise e
 
-    def _validate_target_column(self, train_df: pd.DataFrame, test_df: pd.DataFrame) -> None:
-        if self.target_column not in train_df.columns:
-            raise KeyError(f"Target column '{self.target_column}' not found in training DataFrame")
-        if self.target_column not in test_df.columns:
-            raise KeyError(f"Target column '{self.target_column}' not found in testing DataFrame")
 
 if __name__ == "__main__":
     data_transformation = ColumnTransformation()
