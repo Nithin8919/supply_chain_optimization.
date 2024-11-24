@@ -1,9 +1,24 @@
-# Base image for PostgreSQL
-FROM postgres:latest
+FROM apache/airflow:2.9.0
 
-# Copy the data file and initialization script to the container
-COPY supply_chain_data.xlsx /docker-entrypoint-initdb.d/
-COPY init.sql /docker-entrypoint-initdb.d/
+USER root
 
-# Expose PostgreSQL port
-EXPOSE 5432
+# Install system dependencies
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+    build-essential \
+    python3-dev \
+    curl \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
+# Create necessary directories
+RUN mkdir -p /opt/airflow/data /opt/airflow/models
+
+# Set permissions
+RUN chown -R airflow:root /opt/airflow
+
+USER airflow
+
+# Install Python packages
+COPY requirements.txt /requirements.txt
+RUN pip install --no-cache-dir -r /requirements.txt
