@@ -1,4 +1,4 @@
-FROM apache/airflow:2.9.0
+FROM apache/airflow:2.10.3
 
 USER root
 
@@ -16,6 +16,7 @@ RUN mkdir -p /opt/airflow/data /opt/airflow/models
 
 # Set permissions
 RUN chown -R airflow:root /opt/airflow
+ENV PYTHONPATH="$PYTHONPATH:$PWD"
 
 USER airflow
 

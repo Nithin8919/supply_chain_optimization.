@@ -12,7 +12,9 @@ import sys
 import os
 
 # Add the parent directory to the Python path
-sys.path.append(os.path.abspath('/Users/nitin/Desktop/supply_chain_chain_/src'))
+project_root = os.path.abspath(os.path.join(os.path.dirname('/Users/nitin/Desktop/supply_chain_chain_/src'), '..'))
+sys.path.insert(0, project_root)
+
 
 from src.components.Data_ingestion import DataIngestion
 
