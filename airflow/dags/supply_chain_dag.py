@@ -3,11 +3,11 @@ from airflow.operators.python import PythonOperator
 from datetime import datetime, timedelta
 import os
 import sys
-from src.components.Data_ingestion import DataIngestion
-from src.components.Data_preprocessing import ColumnTransformation
-from src.components.Model_training import ModelTrainer
-from src.components.model_evaluation import Model_evaluation
-from src.logging_config import logging
+from airflow.dags.src.components.Data_ingestion import DataIngestion
+from airflow.dags.src.components.Data_preprocessing import ColumnTransformation
+from airflow.dags.src.components.Model_training import ModelTrainer
+from airflow.dags.src.components.model_evaluation import Model_evaluation
+from airflow.dags.src.logging_config import logging
 import sys
 import os
 
@@ -24,7 +24,7 @@ default_args = {
     'owner': 'airflow',
     'start_date': datetime(2024, 1, 1),
     'retries': 3,
-    'retry_delay': timedelta(minutes=5),
+    'retry_delay': timedelta(minutes=1),
     'email_on_failure': False,
     'email_on_retry': False,
     'depends_on_past': False
