@@ -12,11 +12,13 @@ import sys
 import os
 
 # Add the parent directory to the Python path
-project_root = os.path.abspath(os.path.join(os.path.dirname('/Users/nitin/Desktop/supply_chain_chain_/src'), '..'))
-sys.path.insert(0, project_root)
+# Ensure that the path to the 'src' directory is correctly added
+project_root = os.path.abspath(os.path.join(os.path.dirname('/Users/nitin/Desktop/supply_chain_chain_'), '..'))
+src_path = os.path.join(project_root, 'src')  # This should be the 'src' directory
+sys.path.insert(0, src_path)
 
 
-from src.components.Data_ingestion import DataIngestion
+from airflow.dags.src.components.Data_ingestion import DataIngestion
 
 
 # Define default arguments for the DAG
