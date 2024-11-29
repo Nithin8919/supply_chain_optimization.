@@ -55,8 +55,8 @@ jobs:
 
       - name: Copy DAGs to Airflow Directory
         run: |
-          mkdir -p ~/airflow/dags  # Replace with your Airflow installation directory
-          cp -r dags/* ~/airflow/dags/
+          mkdir -p /Users/nitin/Desktop/supply_chain_chain_/airflow/dags/supply_chain_dag.py  # Replace with your Airflow installation directory
+          cp -r dags/* /Users/nitin/Desktop/supply_chain_chain_/airflow/dags/supply_chain_dag.py
 
       - name: Trigger Airflow DAG
         env:
