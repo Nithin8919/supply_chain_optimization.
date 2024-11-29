@@ -89,10 +89,7 @@ class TrainingPipeline:
                 test_arr = pickle.load(f)
 
             # Train the model
-            self.model_trainer.initiate_model_training(
-                train_data=train_arr,
-                test_data=test_arr
-            )
+            self.model_trainer.initiate_model_training()
             logging.info("Model training completed.")
         except Exception as e:
             logging.error(f"Error during model training: {e}")
