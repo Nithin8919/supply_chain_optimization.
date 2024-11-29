@@ -1,0 +1,76 @@
+name: Supply Chain Optimization CI/CD
+
+on:
+  push:
+    branches:
+      - main  # Run pipeline on pushes to the main branch
+  pull_request:
+    branches:
+      - main  # Run pipeline on pull requests to the main branch
+  workflow_dispatch:  # Allow manual triggering of the pipeline
+
+jobs:
+  setup-environment:
+    name: Setup Python Environment
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.11  # Use your Python version
+
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+  lint-and-test:
+    name: Lint and Test Code
+    runs-on: ubuntu-latest
+    needs: setup-environment
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Lint Python Code
+        run: |
+          pip install flake8
+          flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+
+      - name: Run Unit Tests
+        run: |
+          pip install pytest
+          pytest tests/  # Replace with your test folder path
+
+  deploy:
+    name: Deploy and Execute Airflow DAGs
+    runs-on: ubuntu-latest
+    needs: [setup-environment, lint-and-test]
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Copy DAGs to Airflow Directory
+        run: |
+          mkdir -p ~/airflow/dags  # Replace with your Airflow installation directory
+          cp -r dags/* ~/airflow/dags/
+
+      - name: Trigger Airflow DAG
+        env:
+          AIRFLOW_HOME: ~/airflow
+        run: |
+          airflow dags trigger -d supply_chain_training_pipeline
+          airflow dags state supply_chain_training_pipeline $(date +%Y-%m-%d)  # Monitor state
+
+  clean-up:
+    name: Clean Artifacts
+    runs-on: ubuntu-latest
+    if: always()  # Always run this step, even if previous steps fail
+    steps:
+      - name: Remove Temporary Files
+        run: |
+          rm -rf ~/airflow/logs/*
+          echo "Artifacts cleaned up."
