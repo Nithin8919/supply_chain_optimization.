@@ -21,27 +21,14 @@ __pycache__/
 *.pyd
 
 # Artifacts (Specific and General)
-/artifacts/
-artifacts/
-artifacts/*
-**/*.pkl
+
 data
 /data/
 data/*
 
 
 # Specific large files
-artifacts/test_array.pkl
-artifacts/train_array.pkl
-airflow_env/
-logs/
-artifacts/test_array.pkl
-artifacts/train_array.pkl
-artifacts/train_array.pkl
-artifacts/test_array.pkl
-/artifacts/
-artifacts/
-**/*.
+
 
 # IDE files
 .vscode/
