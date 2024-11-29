@@ -24,9 +24,9 @@ class Model_evaluation:
         mse = mean_squared_error(actual,pred)
         rmse = np.sqrt(mse)
         mae = mean_absolute_error(actual,pred)
-        r2_score = r2_score(actual,pred)
+        r2  = r2_score(actual,pred)
         logging.info("evaluation metrics captured")
-        return mse,rmse,mae,r2_score
+        return mse,rmse,mae,r2
     
     def initiate_model_evaluation(self, train_array, test_array):
         try:
