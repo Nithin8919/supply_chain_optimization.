@@ -24,7 +24,18 @@ class DataIngestionConfig:
 
 
    def __post_init__(self):
-       self.artifacts_dir.mkdir(parents=True, exist_ok=True)
+        self.artifacts_dir.mkdir(parents=True, exist_ok=True)
+
+   def to_dict(self):
+        """Convert paths to strings for JSON serialization."""
+        return {
+            "artifacts_dir": str(self.artifacts_dir),
+            "train_data_path": str(self.train_data_path),
+            "test_data_path": str(self.test_data_path),
+            "raw_data_path": str(self.raw_data_path),
+            "test_size": self.test_size,
+            "random_state": self.random_state
+        }
 
 
 # Abstract class for data ingestion
@@ -122,5 +133,5 @@ if __name__ == "__main__":
    # Ingest data from CSV
    train_path, test_path = data_ingestion.ingest_and_split(
        source_type='csv',
-       file_path='FMCG_data_augmented.csv'
+       file_path='/Users/nitin/Desktop/supply_chain_chain_/data/FMCG_data_augmented.csv'
    )

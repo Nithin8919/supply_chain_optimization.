@@ -48,6 +48,9 @@ artifacts/
 .idea/
 *.swp
 *.swo
+logs_sys
+airflow.cfg.save
+
 
 # Misc
 .DS_Store
