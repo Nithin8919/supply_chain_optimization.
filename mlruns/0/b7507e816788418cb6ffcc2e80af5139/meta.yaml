@@ -1,0 +1,15 @@
+artifact_uri: file:///Users/nitin/Desktop/supply_chain_chain_/mlruns/0/b7507e816788418cb6ffcc2e80af5139/artifacts
+end_time: 1732900617586
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: b7507e816788418cb6ffcc2e80af5139
+run_name: bedecked-moth-846
+run_uuid: b7507e816788418cb6ffcc2e80af5139
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1732900615842
+status: 3
+tags: []
+user_id: nitin

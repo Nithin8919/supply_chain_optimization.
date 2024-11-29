@@ -10,6 +10,8 @@ from pathlib import Path
 from concurrent.futures import ThreadPoolExecutor, as_completed
 import time
 import joblib
+import mlflow
+import mlflow.sklearn
 
 # Set up logging configuration
 logging.basicConfig(
@@ -96,6 +98,8 @@ def save_object(file_path, obj):
         logging.error(f"Error saving object to {file_path}: {str(e)}")
         raise
 
+
+
 class ModelTrainer:
     def __init__(self, config=None, evaluation_strategy=None):
         self.config = config or ModelTrainerConfig()
@@ -133,7 +137,7 @@ class ModelTrainer:
 
     def initiate_model_training(self):
         """
-        Load data, train models, and save the best model
+        Load data, train models, and save the best model, including MLflow tracking
         """
         try:
             start_time = time.time()
@@ -189,7 +193,19 @@ class ModelTrainer:
                 logging.warning(f"Best model score {best_score} below threshold")
                 return None
 
-            # Save the best model
+            # Start MLflow run
+            with mlflow.start_run():
+                # Log the best model to MLflow
+                mlflow.log_param("best_model_name", best_model_name)
+                mlflow.log_metric("best_model_score", best_score)
+                mlflow.sklearn.log_model(
+                    sk_model=best_model,
+                    artifact_path="model",
+                    registered_model_name="Best_Model"
+                )
+                logging.info(f"Best model {best_model_name} registered in MLflow.")
+
+            # Save the best model locally
             save_object(self.config.trained_model_file_path, best_model)
             
             total_time = time.time() - start_time

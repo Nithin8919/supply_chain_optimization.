@@ -1,10 +1,19 @@
 import os
 import sys
+import mlflow
 from airflow.dags.src.components.Data_ingestion import DataIngestion
 from airflow.dags.src.components.Data_preprocessing import ColumnTransformation
 from airflow.dags.src.components.Model_training import ModelTrainer
-from airflow.dags.src.components.model_evaluation import Model_evaluation
 from airflow.dags.src.logging_config import logging
+
+# Ensure logs are written to a file
+LOG_DIR = "logs"
+os.makedirs(LOG_DIR, exist_ok=True)
+log_file_path = os.path.join(LOG_DIR, "training_pipeline.log")
+file_handler = logging.FileHandler(log_file_path)
+file_handler.setFormatter(logging.Formatter('%(asctime)s - %(levelname)s - %(message)s'))
+logging.getLogger().addHandler(file_handler)
+
 
 class TrainingPipeline:
     def __init__(self):
@@ -23,8 +32,11 @@ class TrainingPipeline:
                 file_path='/Users/nitin/Desktop/supply_chain_chain_/data/FMCG_data_augmented.csv'
             )
             logging.info(f"Data ingestion completed. Train path: {train_data_path}, Test path: {test_data_path}")
+            mlflow.log_param("data_source_type", "csv")
+            mlflow.log_artifact(train_data_path, artifact_path="data")
+            mlflow.log_artifact(test_data_path, artifact_path="data")
             return train_data_path, test_data_path
-        
+
         except Exception as e:
             logging.error(f"Error in data ingestion pipeline: {str(e)}")
             raise e
@@ -40,32 +52,40 @@ class TrainingPipeline:
                 test_path=test_data_path
             )
             logging.info(f"Data transformation completed. Train array shape: {train_arr.shape}, Test array shape: {test_arr.shape}")
+            mlflow.log_metric("train_array_shape", train_arr.shape[0])
+            mlflow.log_metric("test_array_shape", test_arr.shape[0])
             return train_arr, test_arr
-        
+
         except Exception as e:
             logging.error(f"Error in data transformation pipeline: {str(e)}")
             raise e
 
     def start_model_training(self, train_arr, test_arr):
-        """
-        Initiates the model training process
-        """
+    
         try:
             logging.info("Starting model training process")
-            # Create an instance of model trainer with the arrays
-            training_result = self.model_trainer.initiate_model_training(
-            )
+            
+            # Call initiate_model_training
+            best_model = self.model_trainer.initiate_model_training()
+
+            if best_model is None:
+                logging.warning("No model was successfully trained. Skipping further steps.")
+                return None
+
+            # Log the trained model with MLflow
+            logging.info("Logging the best model to MLflow")
+            mlflow.sklearn.log_model(best_model, artifact_path="model")
+
             logging.info("Model training completed successfully")
-            return training_result
-        
+            return best_model
+
         except Exception as e:
             logging.error(f"Error in model training pipeline: {str(e)}")
             raise e
 
+
     def start_training(self):
-        """
-        Executes the complete training pipeline
-        """
+   
         try:
             logging.info("Starting the complete training pipeline")
             
@@ -76,14 +96,19 @@ class TrainingPipeline:
             train_arr, test_arr = self.start_data_transformation(train_data_path, test_data_path)
             
             # Step 3: Model Training
-            training_result = self.start_model_training(train_arr, test_arr)
+            best_model = self.start_model_training(train_arr, test_arr)
             
+            if best_model is None:
+                logging.warning("Training pipeline completed with no successful model training")
+                return None
+
             logging.info("Training pipeline completed successfully")
-            return training_result
-        
+            return best_model
+
         except Exception as e:
             logging.error(f"Error in training pipeline: {str(e)}")
             raise e
+
 
 
 if __name__ == "__main__":

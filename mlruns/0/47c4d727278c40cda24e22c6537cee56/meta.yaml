@@ -1,0 +1,15 @@
+artifact_uri: file:///Users/nitin/Desktop/supply_chain_chain_/mlruns/0/47c4d727278c40cda24e22c6537cee56/artifacts
+end_time: 1732900213249
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: 47c4d727278c40cda24e22c6537cee56
+run_name: caring-sow-9
+run_uuid: 47c4d727278c40cda24e22c6537cee56
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1732900208877
+status: 3
+tags: []
+user_id: nitin

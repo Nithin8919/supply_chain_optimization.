@@ -1,0 +1,12 @@
+creation_timestamp: 1732900617585
+current_stage: None
+description: null
+last_updated_timestamp: 1732900617585
+name: Best_Model
+run_id: b7507e816788418cb6ffcc2e80af5139
+run_link: null
+source: file:///Users/nitin/Desktop/supply_chain_chain_/mlruns/0/b7507e816788418cb6ffcc2e80af5139/artifacts/model
+status: READY
+status_message: null
+user_id: null
+version: 1
