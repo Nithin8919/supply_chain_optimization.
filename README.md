@@ -1,4 +1,4 @@
-# **Supply Chain Optimization for a Retail Giant in the USA**
+# **Supply Chain Optimization **
 
 ## **Project Overview**
 This project is designed to address supply chain optimization for a well-known retail company in the USA. The primary objective is to predict the **`product_wg_ton`**, which refers to the weight in tons of products that should be available to meet customer demand efficiently.
