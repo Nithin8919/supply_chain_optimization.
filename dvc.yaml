@@ -1,0 +1,11 @@
+stages:
+  train:
+    cmd: python model_training.py
+    deps:
+      - artifacts/train_array.pkl
+      - artifacts/test_array.pkl
+      - airflow/dags/src/model_training.py
+    outs:
+      - artifacts/model.pkl
+    metrics:
+      - metrics/model_score.txt

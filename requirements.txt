@@ -3,6 +3,8 @@ numpy
 matplotlib
 plotly
 scikit-learn
+mlflow
+dvc
 seaborn
 
 -e.

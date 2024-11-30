@@ -1,0 +1,4 @@
+[core]
+    remote = myremote
+['remote "myremote"']
+    url = /Users/nitin/Desktop/supply_chain_chain_/dvc_storage

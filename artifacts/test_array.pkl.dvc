@@ -1,0 +1,5 @@
+outs:
+- md5: e1917ba9a5617ec4ba532f64d80446d5
+  size: 1840225
+  hash: md5
+  path: test_array.pkl
