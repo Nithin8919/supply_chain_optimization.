@@ -74,7 +74,11 @@ The dataset includes:
 
 ## **Project Orchestration**
 - **Airflow DAGs**: Define and manage workflows for data ingestion, EDA, model training
-![Airflow Dags](/Users/nitin/Desktop/supply_chain_chain_/assets/IMG_20241130_113548.jpg)
+![Airflow Dags]![IMG_20241130_113548](https://github.com/user-attachments/assets/40acdbcb-dac1-4f34-ae54-fd9611df8da6)
+
+- **MLFlow Evaluation**:
+![mlflow img](https://github.com/user-attachments/assets/05387458-7709-4b95-8fd3-b6e14b96e3d3)
+
 
 ## **How to Run the Project**
 
@@ -86,7 +90,7 @@ The dataset includes:
 
 1. **Clone the Repository**
    ```bash
-   git clone https://github.com/your_username/supply-chain-optimization.git
+   git clone https://github.com/Nithin8919/supply-chain-optimization.git
    cd supply-chain-optimization
    ```
 
@@ -106,7 +110,7 @@ The dataset includes:
 
 4. **Train the Model**
    ```bash
-   python train.py
+   python training_pipeline.py
    ```
 
 5. **Serve the Model**
@@ -135,8 +139,8 @@ The dataset includes:
 ---
 
 ## **Contributors**
-- **Your Name**  
-  [GitHub](https://github.com/your_username) | [LinkedIn](https://www.linkedin.com/in/your_profile)
+- **Nithin CH**  
+  [GitHub](https://github.com/Nithin8919) | [LinkedIn](https://www.linkedin.com/in/nithin-ch-7a478b21a/)
 
 ---
 
