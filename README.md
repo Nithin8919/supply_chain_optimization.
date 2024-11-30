@@ -77,7 +77,7 @@ The dataset includes:
 ![Airflow Dags]![IMG_20241130_113548](https://github.com/user-attachments/assets/40acdbcb-dac1-4f34-ae54-fd9611df8da6)
 
 - **MLFlow Evaluation**:
-<img width="1512" alt="Screenshot 2024-11-30 at 12 00 17 PM" src="https://github.com/user-attachments/assets/e03c14cf-fed1-448d-81ac-1d60c6fd9b18">
+![mlflow img](https://github.com/user-attachments/assets/05387458-7709-4b95-8fd3-b6e14b96e3d3)
 
 
 ## **How to Run the Project**
