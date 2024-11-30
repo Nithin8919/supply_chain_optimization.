@@ -76,6 +76,8 @@ The dataset includes:
 - **Airflow DAGs**: Define and manage workflows for data ingestion, EDA, model training
 ![Airflow Dags]![IMG_20241130_113548](https://github.com/user-attachments/assets/40acdbcb-dac1-4f34-ae54-fd9611df8da6)
 
+- **MLFlow Evaluation**:
+- 
 
 ## **How to Run the Project**
 
