@@ -77,7 +77,8 @@ The dataset includes:
 ![Airflow Dags]![IMG_20241130_113548](https://github.com/user-attachments/assets/40acdbcb-dac1-4f34-ae54-fd9611df8da6)
 
 - **MLFlow Evaluation**:
-- 
+<img width="1512" alt="Screenshot 2024-11-30 at 12 00 17 PM" src="https://github.com/user-attachments/assets/e03c14cf-fed1-448d-81ac-1d60c6fd9b18">
+
 
 ## **How to Run the Project**
 
@@ -89,7 +90,7 @@ The dataset includes:
 
 1. **Clone the Repository**
    ```bash
-   git clone https://github.com/your_username/supply-chain-optimization.git
+   git clone https://github.com/Nithin8919/supply-chain-optimization.git
    cd supply-chain-optimization
    ```
 
@@ -109,7 +110,7 @@ The dataset includes:
 
 4. **Train the Model**
    ```bash
-   python train.py
+   python training_pipeline.py
    ```
 
 5. **Serve the Model**
@@ -139,7 +140,7 @@ The dataset includes:
 
 ## **Contributors**
 - **Your Name**  
-  [GitHub](https://github.com/your_username) | [LinkedIn](https://www.linkedin.com/in/your_profile)
+  [GitHub](https://github.com/Nithin8919) | [LinkedIn]([https://www.linkedin.com/in/your_profile](https://www.linkedin.com/in/nithin-ch-7a478b21a/))
 
 ---
 
