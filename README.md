@@ -1,4 +1,4 @@
-# **Supply Chain Optimization **
+# Supply Chain Optimization 
 
 ## **Project Overview**
 This project is designed to address supply chain optimization for a well-known retail company in the USA. The primary objective is to predict the **`product_wg_ton`**, which refers to the weight in tons of products that should be available to meet customer demand efficiently.
@@ -17,7 +17,7 @@ This project integrates **Machine Learning (ML)** models with robust tools and f
 1. **Demand Forecasting**: Predicting `product_wg_ton` for different product categories using historical sales data and external influencing factors.
 2. **Pipeline Automation**: The use of tools like **Airflow** to automate data processing, training, and deployment pipelines.
 3. **Experiment Tracking**: Employing **MLflow** for tracking model performance and maintaining reproducibility.
-4. **Deployment**: Seamlessly deploying trained models via **MLflow Serving** and integrating them with a **Streamlit** interface for interactive predictions.
+4. **Deployment**: Seamlessly deploying trained models via **MLflow Serving** .
 5. **Version Control**: Utilizing **DVC** to manage large datasets and their versions, ensuring data consistency across experiments.
 
 ---
@@ -29,10 +29,10 @@ This project integrates **Machine Learning (ML)** models with robust tools and f
 The project follows a modular architecture:
 1. **Data Ingestion**:
    - Collect data from multiple sources (e.g., sales, inventory, external factors like holidays or weather).
-   - Store data in **PostgreSQL** for structured querying.
+   - Store data in **MongoDB** for structured querying.
 
 2. **Exploratory Data Analysis (EDA) & Visualization**:
-   - Understand data trends and patterns using tools like **Matplotlib** and **Seaborn**.
+   - Understand data trends and patterns using tools like **Matplotlib** and **Seaborn** and **Plotly**.
 
 3. **Data Cleaning**:
    - Remove inconsistencies, handle missing values, and ensure data quality.
@@ -46,7 +46,6 @@ The project follows a modular architecture:
 
 6. **Model Deployment**:
    - Deploy the model via **MLflow Serving** and expose it as a REST API.
-   - Integrate the API with a **Streamlit** app for user-friendly interaction.
 
 7. **Monitoring**:
    - Use **Grafana** dashboards to track the performance of deployed models and monitor predictions in real time.
@@ -62,9 +61,8 @@ The project follows a modular architecture:
 - **MLflow**: Experiment tracking and model deployment.
 - **DVC (Data Version Control)**: For dataset versioning and consistency.
 - **Airflow**: Pipeline orchestration.
-- **PostgreSQL**: Data storage.
-- **Streamlit**: Building interactive interfaces.
-- **Grafana**: Real-time monitoring.
+- **Github Actions**: CI/CD Pipelines.
+- **MongoDB**: Data storage.
 
 ---
 
@@ -74,16 +72,9 @@ The dataset includes:
 - **Historical Sales Data**: Features like date, product category, and sales volume.
 - **External Factors**: Holidays, promotions, and weather information.
 
-### **Data Columns**
-| Column Name      | Description                           |
-|------------------|---------------------------------------|
-| `date`           | Date of the record                   |
-| `product_id`     | Unique identifier for products        |
-| `product_category` | Product classification              |
-| `sales_volume`   | Quantity sold                        |
-| `product_wg_ton` | Target variable (weight in tons)     |
-
----
+## **Project Orchestration**
+- **Airflow DAGs**: Define and manage workflows for data ingestion, EDA, model training
+![Airflow Dags](/Users/nitin/Desktop/supply_chain_chain_/assets/IMG_20241130_113548.jpg)
 
 ## **How to Run the Project**
 
