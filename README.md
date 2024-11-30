@@ -74,7 +74,8 @@ The dataset includes:
 
 ## **Project Orchestration**
 - **Airflow DAGs**: Define and manage workflows for data ingestion, EDA, model training
-![Airflow Dags](/Users/nitin/Desktop/supply_chain_chain_/assets/IMG_20241130_113548.jpg)
+![Airflow Dags]![IMG_20241130_113548](https://github.com/user-attachments/assets/40acdbcb-dac1-4f34-ae54-fd9611df8da6)
+
 
 ## **How to Run the Project**
 
