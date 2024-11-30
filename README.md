@@ -139,8 +139,8 @@ The dataset includes:
 ---
 
 ## **Contributors**
-- **Your Name**  
-  [GitHub](https://github.com/Nithin8919) | [LinkedIn]([https://www.linkedin.com/in/your_profile](https://www.linkedin.com/in/nithin-ch-7a478b21a/))
+- **Nithin CH**  
+  [GitHub](https://github.com/Nithin8919) | [LinkedIn](https://www.linkedin.com/in/nithin-ch-7a478b21a/)
 
 ---
 
