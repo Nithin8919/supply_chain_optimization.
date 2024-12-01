@@ -24,7 +24,7 @@ This project integrates **Machine Learning (ML)** models with robust tools and f
 
 ## **Architecture**
 
-![Project Architecture](path_to_image/project_architecture.png)
+![SCO Architecture](https://github.com/user-attachments/assets/5b54786d-6455-4f62-9c4e-34af53219fcd)
 
 The project follows a modular architecture:
 1. **Data Ingestion**:
