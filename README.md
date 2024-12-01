@@ -146,10 +146,6 @@ Track metrics and artifacts.
      docker run -d -p 5000:5000 <account_id>.dkr.ecr.<region>.amazonaws.com/supply_chain_model:latest
      ```
 
-7. **Run the Streamlit App**
-   ```bash
-   streamlit run app.py
-   ```
 
 ---
 
