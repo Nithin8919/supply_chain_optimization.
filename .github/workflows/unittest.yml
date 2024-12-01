@@ -67,7 +67,7 @@ jobs:
     needs: build-and-push-ecr-image
     runs-on: self-hosted
     steps:
-      - name: Checkout
+      - name: Checkout Code
         uses: actions/checkout@v3
 
       - name: Configure AWS credentials
@@ -85,10 +85,19 @@ jobs:
         run: |
           docker pull ${{ secrets.AWS_ECR_LOGIN_URI }}/${{ secrets.ECR_REPOSITORY_NAME }}:latest
 
+      - name: Stop and Remove previous container (if exists)
+        run: |
+          docker stop supplychainoptimization || true  # Stops container if exists
+          docker rm supplychainoptimization || true    # Removes the container if exists
+
       - name: Run Docker Image
         run: |
-          docker run -d -p 80:8080 --ipc="host" --name=supplychainoptimization  -e 'AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}' -e 'AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}' -e 'AWS_REGION=${{ secrets.AWS_REGION }}'  ${{secrets.AWS_ECR_LOGIN_URI}}/${{ secrets.ECR_REPOSITORY_NAME }}:latest
+          docker run -d -p 80:8080 --ipc="host" --name=supplychainoptimization \
+            -e 'AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}' \
+            -e 'AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}' \
+            -e 'AWS_REGION=${{ secrets.AWS_REGION }}' \
+            ${{ secrets.AWS_ECR_LOGIN_URI }}/${{ secrets.ECR_REPOSITORY_NAME }}:latest
 
       - name: Clean previous images and containers
         run: |
-          docker system prune -f
+          docker system prune -f  # Removes unused images, containers, and networks
