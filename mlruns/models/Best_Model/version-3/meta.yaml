@@ -1,0 +1,14 @@
+aliases: []
+creation_timestamp: 1733037122889
+current_stage: None
+description: null
+last_updated_timestamp: 1733037122889
+name: Best_Model
+run_id: ad04b4af92cc4d10bb349ec175737b02
+run_link: null
+source: file:///Users/nitin/Desktop/supply_chain_chain_/mlruns/0/ad04b4af92cc4d10bb349ec175737b02/artifacts/model
+status: READY
+status_message: null
+storage_location: file:///Users/nitin/Desktop/supply_chain_chain_/mlruns/0/ad04b4af92cc4d10bb349ec175737b02/artifacts/model
+user_id: null
+version: 3

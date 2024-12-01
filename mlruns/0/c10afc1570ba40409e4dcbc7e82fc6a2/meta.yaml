@@ -1,0 +1,15 @@
+artifact_uri: file:///Users/nitin/Desktop/supply_chain_chain_/mlruns/0/c10afc1570ba40409e4dcbc7e82fc6a2/artifacts
+end_time: 1733035970202
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: c10afc1570ba40409e4dcbc7e82fc6a2
+run_name: sincere-lynx-863
+run_uuid: c10afc1570ba40409e4dcbc7e82fc6a2
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1733035968187
+status: 3
+tags: []
+user_id: nitin

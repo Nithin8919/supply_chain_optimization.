@@ -1,0 +1,15 @@
+artifact_uri: file:///Users/nitin/Desktop/supply_chain_chain_/mlruns/0/ad04b4af92cc4d10bb349ec175737b02/artifacts
+end_time: 1733037122893
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: ad04b4af92cc4d10bb349ec175737b02
+run_name: bittersweet-yak-780
+run_uuid: ad04b4af92cc4d10bb349ec175737b02
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1733037120425
+status: 3
+tags: []
+user_id: nitin

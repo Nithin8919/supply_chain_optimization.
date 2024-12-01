@@ -1,0 +1,15 @@
+artifact_uri: file:///Users/nitin/Desktop/supply_chain_chain_/mlruns/0/32f2feb9282a475d9717b9e3ddfa0945/artifacts
+end_time: 1733035634481
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: 32f2feb9282a475d9717b9e3ddfa0945
+run_name: upset-toad-174
+run_uuid: 32f2feb9282a475d9717b9e3ddfa0945
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1733035632417
+status: 3
+tags: []
+user_id: nitin

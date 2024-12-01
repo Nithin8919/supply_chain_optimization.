@@ -1,0 +1,15 @@
+artifact_uri: file:///Users/nitin/Desktop/supply_chain_chain_/mlruns/0/6c896c5f0c1f432b9f96fe27a32a67ae/artifacts
+end_time: 1733037270639
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: 6c896c5f0c1f432b9f96fe27a32a67ae
+run_name: learned-frog-843
+run_uuid: 6c896c5f0c1f432b9f96fe27a32a67ae
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1733037269002
+status: 3
+tags: []
+user_id: nitin

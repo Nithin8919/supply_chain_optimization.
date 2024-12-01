@@ -1,0 +1,15 @@
+artifact_uri: file:///Users/nitin/Desktop/supply_chain_chain_/mlruns/0/6b1a53359f714e9d89f59dac926c3466/artifacts
+end_time: 1733036524583
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: 6b1a53359f714e9d89f59dac926c3466
+run_name: respected-koi-60
+run_uuid: 6b1a53359f714e9d89f59dac926c3466
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1733036522584
+status: 3
+tags: []
+user_id: nitin

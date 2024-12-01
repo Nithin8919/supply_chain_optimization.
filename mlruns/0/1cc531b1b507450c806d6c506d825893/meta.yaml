@@ -1,0 +1,15 @@
+artifact_uri: file:///Users/nitin/Desktop/supply_chain_chain_/mlruns/0/1cc531b1b507450c806d6c506d825893/artifacts
+end_time: 1733035808780
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: 1cc531b1b507450c806d6c506d825893
+run_name: chill-sloth-866
+run_uuid: 1cc531b1b507450c806d6c506d825893
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1733035806729
+status: 3
+tags: []
+user_id: nitin
