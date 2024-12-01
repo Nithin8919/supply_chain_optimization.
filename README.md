@@ -147,6 +147,4 @@ The dataset includes:
 ## **License**
 This project is licensed under the [MIT License](LICENSE).
 
----
 
-Let me know if you’d like further adjustments or more details added!
