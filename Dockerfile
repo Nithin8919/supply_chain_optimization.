@@ -1,25 +1,15 @@
-FROM apache/airflow:2.10.3
+FROM python:3.11-slim-buster
 
-USER root
+WORKDIR /app
 
-# Install system dependencies
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends \
-    build-essential \
-    python3-dev \
-    curl \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
+# Copy your project files to the Docker container
+COPY . /app
 
-# Create necessary directories
-RUN mkdir -p /opt/airflow/data /opt/airflow/models
+# Install AWS CLI
+RUN apt update -y && apt install awscli -y
 
-# Set permissions
-RUN chown -R airflow:root /opt/airflow
-ENV PYTHONPATH="$PYTHONPATH:$PWD"
+# Install Python dependencies
+RUN apt-get update && pip install -r requirements.txt
 
-USER airflow
-
-# Install Python packages
-COPY requirements.txt /requirements.txt
-RUN pip install --no-cache-dir -r /requirements.txt
+# Set the command to run the training pipeline script
+CMD ["python3", "pipelines/training_pipeline.py"]
