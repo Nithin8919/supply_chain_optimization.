@@ -79,6 +79,10 @@ The dataset includes:
 - **MLFlow Evaluation**:
 ![mlflow img](https://github.com/user-attachments/assets/05387458-7709-4b95-8fd3-b6e14b96e3d3)
 
+- **CI/CD/CD**:
+- ![SCO](https://github.com/user-attachments/assets/399f6463-ac7d-4817-b418-6611d242c00a)
+
+
 
 ## **How to Run the Project**
 
